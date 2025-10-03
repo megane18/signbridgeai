@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SignBridge.ai — Sign Language Recognition API</title>
+<meta name="description" content="Real-time ASL recognition API for developers"/>
+
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://signbridge.ai/"/>
+<meta property="og:title" content="SignBridge.ai - Sign Language Recognition API"/>
+<meta property="og:description" content="Real-time ASL recognition API for developers"/>
+<meta property="og:image" content="https://signbridge.ai/og-card.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg class="logo-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#6366f1"/>
+                <stop offset="100%" stop-color="#818cf8"/>
+              </linearGradient>
+            </defs>
+            <circle class="logo-ring" cx="16" cy="16" r="13" fill="none" stroke="url(#logoGrad)" stroke-width="1.2" opacity="0.4"/>
+            <circle class="logo-ring" cx="16" cy="16" r="10.5" fill="none" stroke="url(#logoGrad)" stroke-width="1" opacity="0.5"/>
+            <g transform="rotate(0 16 16)"><path class="logo-hand" d="M16,8 L14.5,4.5 L16,3 L17.5,4.5 L16,8 Z" fill="url(#logoGrad)"/></g>
+            <g transform="rotate(72 16 16)"><path class="logo-hand" d="M16,8 L14.5,4.5 L16,3 L17.5,4.5 L16,8 Z" fill="url(#logoGrad)" opacity="0.9"/></g>
+            <g transform="rotate(144 16 16)"><path class="logo-hand" d="M16,8 L14.5,4.5 L16,3 L17.5,4.5 L16,8 Z" fill="url(#logoGrad)" opacity="0.9"/></g>
+            <g transform="rotate(216 16 16)"><path class="logo-hand" d="M16,8 L14.5,4.5 L16,3 L17.5,4.5 L16,8 Z" fill="url(#logoGrad)" opacity="0.9"/></g>
+            <g transform="rotate(288 16 16)"><path class="logo-hand" d="M16,8 L14.5,4.5 L16,3 L17.5,4.5 L16,8 Z" fill="url(#logoGrad)" opacity="0.9"/></g>
+            <circle class="logo-center" cx="16" cy="16" r="2.5" fill="url(#logoGrad)"/>
+          </svg>
+        </div>
+        SignBridge
+      </a>
+      
+      <div class="nav-links">
+        <a href="#demo" class="nav-link">Live Demo</a>
+        <a href="#sdks" class="nav-link">SDKs</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="#docs" class="nav-link">Docs</a>
+      </div>
+      
+      <div class="nav-actions">
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>API Operational</span>
+        </div>
+        <button class="theme-btn" id="themeBtn" title="Toggle theme">
+          <div class="theme-icon" id="themeIcon">
+            <div class="sun-icon"></div>
+          </div>
+        </button>
+        <a href="#waitlist" class="btn-primary">Get API Key</a>
+      </div>
+
+      <button class="mobile-toggle" id="mobileToggle">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-links">
+        <a href="#demo" class="nav-link">Live Demo</a>
+        <a href="#sdks" class="nav-link">SDKs</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="#docs" class="nav-link">Docs</a>
+        <a href="#waitlist" class="btn-primary" style="text-align:center">Get API Key</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="waitlist">
+    <div class="badge">
+      <span class="status-dot"></span>
+      In Development • will launch soon
+    </div>
+    <h1>
+      Real-time <span class="gradient-text">sign recognition</span> for developers
+    </h1>
+    <br>
+    <p class="lead">
+      Bring <strong style="color:var(--accent)">real-time sign recognition</strong> to your product. A fast, developer-first API that turns hands into structured meaning—ASL today, extensible tomorrow.
+    </p>
+
+    <br>
+    <form id="waitlistForm" class="hero-form">
+      <input type="email" class="input" placeholder="your@email.com" required id="email"/>
+      <button type="submit" class="btn">Notify me</button>
+    </form>
+    <div class="success" id="success">✓ Thanks! We'll email you when we launch.</div>
+  </section>
+
+  <!-- Live Demo -->
+  <section class="live-demo-section" id="demo">
+    <div class="container">
+      <h2>Try it live in your browser</h2>
+      <p class="section-lead">No API key needed • Real-time recognition using your webcam</p>
+      
+      <div class="demo-widget">
+        <div class="webcam-container" id="webcamContainer">
+          <div class="webcam-placeholder">Click "Start Camera" to begin</div>
+        </div>
+        
+        <div class="demo-controls">
+          <button class="btn" id="startCamera">Start Camera</button>
+          <button class="btn" id="stopCamera" style="background:var(--error);display:none">Stop Camera</button>
+          <button class="btn" style="background:transparent;border:1px solid var(--border);color:var(--text)">Upload Video</button>
+        </div>
+        
+        <div class="recognition-output" id="output">{
+  "status": "Ready",
+  "message": "Waiting for camera input..."
+}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SDKs -->
+  <section class="sdk-section" id="sdks">
+    <h2>Official SDKs & Libraries</h2>
+    <p class="section-lead">Install with your favorite package manager</p>
+    
+    <div class="sdk-grid">
+      <div class="sdk-card">
+        <div class="sdk-header">
+          <div class="sdk-icon">🐍</div>
+          <span style="font-size:12px;color:var(--muted)">★ 1.2k</span>
+        </div>
+        <h3 style="margin-bottom:8px">Python SDK</h3>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:12px">Official Python client</p>
+        <div class="install-cmd">pip install signbridge</div>
+      </div>
+      <div class="sdk-card">
+        <div class="sdk-header">
+          <div class="sdk-icon">📦</div>
+          <span style="font-size:12px;color:var(--muted)">★ 890</span>
+        </div>
+        <h3 style="margin-bottom:8px">JavaScript/Node.js</h3>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:12px">For web and Node.js</p>
+        <div class="install-cmd">npm install signbridge</div>
+      </div>
+      <div class="sdk-card">
+        <div class="sdk-header">
+          <div class="sdk-icon">🔷</div>
+          <span style="font-size:12px;color:var(--muted)">★ 420</span>
+        </div>
+        <h3 style="margin-bottom:8px">Go SDK</h3>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:12px">High-performance Go client</p>
+        <div class="install-cmd">go get signbridge.ai/sdk</div>
+      </div>
+      <div class="sdk-card">
+        <div class="sdk-header">
+          <div class="sdk-icon">💎</div>
+          <span style="font-size:12px;color:var(--muted)">★ 310</span>
+        </div>
+        <h3 style="margin-bottom:8px">Ruby Gem</h3>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:12px">For Rails and Ruby apps</p>
+        <div class="install-cmd">gem install signbridge</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Calculator -->
+  <section class="pricing-section" id="pricing">
+    <div class="container">
+      <h2>Simple, usage-based pricing</h2>
+      <p class="section-lead">Pay only for what you use • Free tier included</p>
+      
+      <div class="pricing-calculator">
+        <div class="calc-input">
+          <label>Monthly API Calls: <span id="callCount">10,000</span></label>
+          <input type="range" class="slider" id="callSlider" min="0" max="1000000" value="10000" step="1000">
+        </div>
+        
+        <div class="calc-result">
+          <div class="price-display" id="priceDisplay">$0</div>
+          <p style="color:var(--muted)">per month</p>
+        </div>
+        
+        <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--border);font-size:14px;color:var(--muted)">
+          <p>• First 5,000 calls free every month</p>
+          <p>• $0.002 per call after that</p>
+          <p>• Volume discounts at 100k+ calls/month</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why SignBridge - Creative Icons -->
+  <section class="sdk-section">
+    <h2>Why developers choose SignBridge</h2>
+    <p class="section-lead">Built for speed, accuracy, and developer experience</p>
+    
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon"><span style="position:relative;z-index:1">⚡</span></div>
+        <h3>Lightning Fast</h3>
+        <p>Sub-100ms latency with edge deployment across 12 regions globally</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><span style="position:relative;z-index:1">🛡️</span></div>
+        <h3>Privacy First</h3>
+        <p>Zero video storage • On-device processing option • SOC 2 Type II certified</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><span style="position:relative;z-index:1">🎯</span></div>
+        <h3>Highly Accurate</h3>
+        <p>98.5% accuracy on ASL • Trained on 2M+ sign samples • Continuous improvements</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><span style="position:relative;z-index:1">🌐</span></div>
+        <h3>Multi-Language</h3>
+        <p>ASL available now • BSL and LSF in Q3 2025 • 8 more languages on roadmap</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><span style="position:relative;z-index:1">📊</span></div>
+        <h3>Real-Time Analytics</h3>
+        <p>Live dashboard • Performance metrics • Usage insights • A/B testing support</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><span style="position:relative;z-index:1">🔌</span></div>
+        <h3>Webhook Support</h3>
+        <p>Event-driven architecture • Automatic retries • Payload validation • Custom endpoints</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="border-top:1px solid var(--border);padding:40px 32px">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:40px">
+        <div>
+          <div class="logo" style="margin-bottom:16px">
+            <div class="logo-icon">
+              <svg class="logo-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="logoGrad2" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#6366f1"/>
+                    <stop offset="100%" stop-color="#818cf8"/>
+                  </linearGradient>
+                </defs>
+                <circle class="logo-ring" cx="16" cy="16" r="13" fill="none" stroke="url(#logoGrad2)" stroke-width="1.2" opacity="0.4"/>
+                <circle class="logo-ring" cx="16" cy="16" r="10.5" fill="none" stroke="url(#logoGrad2)" stroke-width="1" opacity="0.5"/>
+                <g transform="rotate(0 16 16)"><path class="logo-hand" d="M16,8 L14.5,4.5 L16,3 L17.5,4.5 L16,8 Z" fill="url(#logoGrad2)"/></g>
+                <g transform="rotate(72 16 16)"><path class="logo-hand" d="M16,8 L14.5,4.5 L16,3 L17.5,4.5 L16,8 Z" fill="url(#logoGrad2)" opacity="0.9"/></g>
+                <g transform="rotate(144 16 16)"><path class="logo-hand" d="M16,8 L14.5,4.5 L16,3 L17.5,4.5 L16,8 Z" fill="url(#logoGrad2)" opacity="0.9"/></g>
+                <g transform="rotate(216 16 16)"><path class="logo-hand" d="M16,8 L14.5,4.5 L16,3 L17.5,4.5 L16,8 Z" fill="url(#logoGrad2)" opacity="0.9"/></g>
+                <g transform="rotate(288 16 16)"><path class="logo-hand" d="M16,8 L14.5,4.5 L16,3 L17.5,4.5 L16,8 Z" fill="url(#logoGrad2)" opacity="0.9"/></g>
+                <circle class="logo-center" cx="16" cy="16" r="2.5" fill="url(#logoGrad2)"/>
+              </svg>
+            </div>
+            SignBridge
+          </div>
+          <p style="color:var(--muted);font-size:14px;line-height:1.6">
+            Real-time sign language recognition API for developers. Making communication accessible for everyone.
+          </p>
+        </div>
+        
+        <div>
+          <h4 style="font-size:14px;font-weight:600;margin-bottom:16px">Product</h4>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <a href="#demo" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Live Demo</a>
+            <a href="#sdks" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">SDKs</a>
+            <a href="#pricing" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Pricing</a>
+            <a href="/roadmap" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Roadmap</a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 style="font-size:14px;font-weight:600;margin-bottom:16px">Developers</h4>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <a href="/docs" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Documentation</a>
+            <a href="/api-reference" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">API Reference</a>
+            <a href="https://github.com/signbridge" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">GitHub</a>
+            <a href="/changelog" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Changelog</a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 style="font-size:14px;font-weight:600;margin-bottom:16px">Company</h4>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <a href="/about" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">About</a>
+            <a href="/privacy" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Privacy</a>
+            <a href="/terms" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Terms</a>
+            <a href="mailto:hello@signbridge.ai" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Contact</a>
+          </div>
+        </div>
+      </div>
+      
+      <div style="padding-top:32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+        <p style="font-size:14px;color:var(--muted)">© 2025 SignBridge. Built for accessible communication.</p>
+        <div style="display:flex;gap:24px">
+          <a href="https://twitter.com/signbridge" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Twitter</a>
+          <a href="https://linkedin.com/company/signbridge" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">LinkedIn</a>
+          <a href="https://github.com/signbridge" style="color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./index.js"></script>
+</body>
+</html>
