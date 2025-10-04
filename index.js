@@ -35,12 +35,14 @@ if (mobileToggle && mobileMenu) {
   });
 }
 
-// Waitlist form
+//Waitlist form
 const waitlistForm = document.getElementById('waitlistForm');
 if (waitlistForm) {
   waitlistForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('email').value;
+    const form = e.target;
+    const data = new FormData(form);
+
     const btn = e.target.querySelector('.btn');
     const success = document.getElementById('success');
     const orig = btn.textContent;
@@ -49,16 +51,18 @@ if (waitlistForm) {
     btn.disabled = true;
 
     try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ email })
+      const res = await fetch(form.action, {
+        method: form.method,
+        body: data,
+        headers: {'Accept': 'application/json'}
       });
 
       if (res.ok) {
         success.style.display = 'block';
-        e.target.reset();
+        form.reset();
         setTimeout(() => success.style.display = 'none', 5000);
+      } else{
+        alert("Oops! Something went wrong, please try again.")
       }
     } catch (err) {
       alert('Network error. Please try again.');
@@ -154,3 +158,5 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
   });
 });
+
+
