@@ -13,20 +13,414 @@
 <meta property="og:image" content="https://signbridge.ai/og-card.png"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <link rel="icon" href="./public/favicon.svg" type="image/svg+xml">
-<!-- PNG fallbacks (many mobile browsers prefer these) -->
 <link rel="icon" href="./public/favicon-32.png?v=4" sizes="32x32" type="image/png">
 <link rel="icon" href="./public/favicon-16.png?v=4" sizes="16x16" type="image/png">
-
-<!-- iOS/Android home screen -->
 <link rel="apple-touch-icon" href="./public/apple-touch-icon.png?v=4" sizes="180x180">
-
-<!-- (Optional) Safari pinned tab -->
 <link rel="mask-icon" href="./public/safari-pinned-tab.svg?v=4" color="#6366f1">
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 
-<link rel="stylesheet" href="./styles.css" />
+<style>
+:root{
+  --bg:#fafafa;
+  --surface:#fff;
+  --surface-alt:#f8f9fa;
+  --text:#18181b;
+  --muted:#71717a;
+  --border:#e4e4e7;
+  --accent:#6366f1;
+  --accent-light:#818cf8;
+  --success:#10b981;
+  --warning:#f59e0b;
+  --error:#ef4444;
+  --code-bg:#18181b;
+}
+
+body.dark{
+  --bg:#09090b;
+  --surface:#18181b;
+  --surface-alt:#0f0f1a;
+  --text:#fafafa;
+  --muted:#a1a1aa;
+  --border:#27272a;
+  --code-bg:#0a0a0a;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:Inter,system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  transition:background .3s,color .3s;
+}
+
+/* Navbar */
+nav{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(10px);
+}
+
+.nav-container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:16px 32px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:600;
+  font-size:18px;
+  color:var(--text);
+  text-decoration:none;
+}
+
+.logo-icon{
+  width:32px;
+  height:32px;
+  position:relative;
+  display:grid;
+  place-items:center;
+}
+
+.logo-svg{width:100%;height:100%}
+.logo-ring{transform-origin:center;animation:ringPulse 2.5s ease-in-out infinite}
+.logo-ring:nth-child(1){animation-delay:0s}
+.logo-ring:nth-child(2){animation-delay:.3s}
+
+@keyframes ringPulse{
+  0%,100%{opacity:.4}
+  50%{opacity:.8}
+}
+
+.logo-hand{animation:handGlow 2.5s ease-in-out infinite}
+
+.logo-center{
+  animation:centerPulse 2s ease-in-out infinite;
+  transform-origin:center;
+}
+
+@keyframes handGlow{
+  0%,100%{opacity:.8}
+  50%{opacity:1}
+}
+
+@keyframes centerPulse{
+  0%,100%{transform:scale(1);opacity:.9}
+  50%{transform:scale(1.15);opacity:1}
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:32px;
+}
+
+.nav-link{
+  color:var(--muted);
+  text-decoration:none;
+  font-size:15px;
+  font-weight:500;
+  transition:color .2s;
+}
+.nav-link:hover{color:var(--text)}
+
+.nav-actions{display:flex;align-items:center;gap:16px}
+
+/* API Status Badge */
+.status-badge{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 12px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:13px;
+  background:var(--surface);
+}
+
+.status-dot{
+  width:6px;
+  height:6px;
+  background:var(--success);
+  border-radius:50%;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.6;transform:scale(1.3)}
+}
+
+.theme-btn{
+  width:40px;
+  height:40px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface);
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  position:relative;
+  overflow:hidden;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+}
+.theme-btn:hover{border-color:var(--accent);transform:scale(1.08)}
+
+.theme-icon{width:20px;height:20px;position:relative;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.sun-icon{width:14px;height:14px;background:var(--text);border-radius:50%;position:relative}
+.sun-icon::before{
+  content:'';
+  position:absolute;
+  inset:-6px;
+  border-radius:50%;
+  background:radial-gradient(circle,transparent 50%,var(--text) 50%,var(--text) 55%,transparent 55%);
+  animation:sunRotate 8s linear infinite;
+}
+@keyframes sunRotate{to{transform:rotate(360deg)}}
+
+.moon-icon{
+  width:16px;height:16px;background:var(--text);border-radius:50%;position:relative;
+  box-shadow:inset -4px -2px 0 0 var(--bg);
+}
+body.dark .theme-icon{transform:rotate(180deg)}
+
+.btn-primary{
+  padding:10px 20px;border:none;border-radius:10px;background:var(--text);color:var(--bg);
+  font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+
+/* Mobile */
+.mobile-toggle{
+  display:none;width:40px;height:40px;border:1px solid var(--border);border-radius:10px;background:var(--surface);
+  cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:all .2s;
+}
+.mobile-toggle:hover{border-color:var(--accent)}
+.mobile-toggle span{width:18px;height:2px;background:var(--text);border-radius:2px;transition:all .3s cubic-bezier(.4,0,.2,1)}
+.mobile-toggle.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.mobile-toggle.active span:nth-child(2){opacity:0;transform:translateX(-10px)}
+.mobile-toggle.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+.mobile-menu{display:none;background:var(--surface);border-bottom:1px solid var(--border);padding:24px 32px;animation:slideDown .3s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.mobile-menu.open{display:block}
+.mobile-links{display:flex;flex-direction:column;gap:16px}
+
+/* Hero */
+.hero{max-width:1200px;margin:0 auto;padding:120px 32px 80px;text-align:center}
+
+.badge{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--border);
+  border-radius:100px;font-size:13px;font-weight:500;color:var(--muted);margin-bottom:24px;
+}
+
+h1{
+  font-size:clamp(40px,6vw,64px);font-weight:700;letter-spacing:-.02em;line-height:1.1;margin-bottom:24px;
+  max-width:900px;margin-left:auto;margin-right:auto;
+}
+
+.gradient-text{
+  background:linear-gradient(135deg,var(--accent),var(--accent-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.lead{font-size:20px;color:var(--muted);max-width:700px;margin:0 auto 40px}
+
+.hero-form{display:flex;gap:12px;max-width:500px;margin:0 auto 16px}
+
+.input{
+  flex:1;padding:14px 20px;border:1px solid var(--border);border-radius:10px;background:var(--surface);
+  color:var(--text);font-size:15px;font-family:inherit;transition:all .2s;
+}
+.input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.1)}
+
+.btn{
+  padding:14px 28px;border:none;border-radius:10px;background:var(--text);color:var(--bg);
+  font-weight:600;font-size:15px;cursor:pointer;transition:all .2s;
+}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+
+.success{
+  display:none;padding:12px 20px;border-radius:10px;background:var(--success);color:#fff;font-size:14px;font-weight:500;
+  margin:16px auto 0;max-width:500px;
+}
+
+.note{font-size:14px;color:var(--muted);margin-top:12px}
+
+/* Collaborator Section */
+.collaborator-section{
+  max-width:1200px;
+  margin:80px auto;
+  padding:40px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:32px;
+  transition:all .3s;
+}
+.collaborator-section:hover{
+  border-color:var(--accent);
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+  transform:translateY(-2px);
+}
+.collab-content h3{
+  font-size:28px;
+  font-weight:700;
+  margin-bottom:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-light));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.collab-content p{
+  font-size:16px;
+  color:var(--muted);
+  line-height:1.6;
+  max-width:500px;
+}
+.collaborator-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.collaborator-actions .btn{
+  padding:12px 24px;
+  border:none;
+  border-radius:10px;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  transition:all .2s;
+  text-decoration:none;
+  display:inline-block;
+  white-space:nowrap;
+}
+.collaborator-actions .btn-primary{
+  background:var(--text);
+  color:var(--bg);
+}
+.collaborator-actions .btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+.collaborator-actions .btn-secondary{
+  background:var(--surface-alt);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+.collaborator-actions .btn-secondary:hover{
+  border-color:var(--accent);
+  transform:translateY(-2px);
+}
+
+/* Live Demo Section */
+.live-demo-section{background:var(--surface-alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 32px}
+.container{max-width:1200px;margin:0 auto}
+
+h2{font-size:clamp(32px,4vw,42px);font-weight:700;margin-bottom:16px}
+.section-lead{font-size:18px;color:var(--muted);margin-bottom:40px}
+
+.demo-widget{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;margin-top:32px;
+}
+
+.webcam-container{
+  aspect-ratio:16/9;background:#000;border-radius:12px;position:relative;overflow:hidden;margin-bottom:24px;
+}
+.webcam-placeholder{display:grid;place-items:center;height:100%;color:#fff;font-size:18px}
+
+.demo-controls{display:flex;gap:12px;margin-bottom:24px}
+
+.recognition-output{
+  padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--code-bg);color:#e4e4e7;
+  font-family:'JetBrains Mono',monospace;font-size:14px;min-height:100px;
+}
+
+/* SDK Section */
+.sdk-section{max-width:1200px;margin:0 auto;padding:80px 32px}
+.sdk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:32px}
+.sdk-card{
+  padding:24px;border:1px solid var(--border);border-radius:12px;background:var(--surface);transition:all .2s;
+}
+.sdk-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.sdk-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sdk-icon{
+  width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:24px;background:rgba(99,102,241,.1);
+}
+.install-cmd{
+  background:var(--code-bg);padding:12px 16px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#e4e4e7;margin-top:12px;
+}
+
+/* Pricing Calculator */
+.pricing-section{background:var(--surface-alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 32px}
+.pricing-calculator{
+  max-width:600px;margin:40px auto 0;padding:32px;border:1px solid var(--border);border-radius:16px;background:var(--surface);
+}
+.calc-input{margin-bottom:24px}
+.calc-input label{display:block;font-weight:600;margin-bottom:8px}
+
+.slider{width:100%;height:6px;border-radius:3px;background:var(--border);outline:none;-webkit-appearance:none}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer}
+
+.calc-result{padding:20px;border-radius:12px;background:var(--bg);text-align:center}
+.price-display{font-size:48px;font-weight:700;color:var(--accent);margin-bottom:8px}
+
+/* Feature Icons */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-top:48px}
+.feature{
+  padding:32px;border:1px solid var(--border);border-radius:12px;background:var(--surface);transition:all .2s;position:relative;
+}
+.feature:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.feature-icon{
+  width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-size:28px;margin-bottom:20px;position:relative;
+}
+.feature-icon::before{
+  content:'';position:absolute;inset:0;border-radius:14px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(129,140,248,.1));
+}
+.feature h3{font-size:18px;font-weight:600;margin-bottom:12px}
+.feature p{font-size:15px;color:var(--muted)}
+
+/* Responsive */
+@media (max-width:768px){
+  .nav-links,.nav-actions .btn-primary,.status-badge{display:none}
+  .mobile-toggle{display:flex}
+  .hero{padding:80px 24px 60px}
+  .hero-form{flex-direction:column}
+  .demo-controls{flex-direction:column}
+  footer > div > div:first-child{grid-template-columns:1fr!important;gap:32px!important;}
+  .collaborator-section{
+    flex-direction:column;
+    text-align:center;
+    padding:32px 24px;
+    margin:40px 24px;
+  }
+  .collab-content p{
+    max-width:100%;
+  }
+  .collaborator-actions{
+    flex-direction:column;
+    width:100%;
+  }
+  .collaborator-actions .btn{
+    width:100%;
+    text-align:center;
+  }
+}
+</style>
 </head>
 <body>
   <!-- Navbar -->
@@ -106,147 +500,30 @@
 
     <br>
     <form id="waitlistForm" class="hero-form" action="https://formspree.io/f/mjkarnwb" method="POST">
-
-      <input type="email" class="input" name= "email" placeholder="your@email.com" required id="email"/>
+      <input type="email" class="input" name="email" placeholder="your@email.com" required id="email"/>
       <button type="submit" class="btn">Notify me</button>
     </form>
     <div class="success" id="success">✓ Thanks! We'll email you when we launch.</div>
   </section>
 
-  <!-- Live Demo -->
-  <!-- <section class="live-demo-section" id="demo">
-    <div class="container">
-      <h2>Try it live in your browser</h2>
-      <p class="section-lead">No API key needed • Real-time recognition using your webcam</p>
-      
-      <div class="demo-widget">
-        <div class="webcam-container" id="webcamContainer">
-          <div class="webcam-placeholder">Click "Start Camera" to begin</div>
-        </div>
-        
-        <div class="demo-controls">
-          <button class="btn" id="startCamera">Start Camera</button>
-          <button class="btn" id="stopCamera" style="background:var(--error);display:none">Stop Camera</button>
-          <button class="btn" style="background:transparent;border:1px solid var(--border);color:var(--text)">Upload Video</button>
-        </div>
-        
-        <div class="recognition-output" id="output">{
-  "status": "Ready",
-  "message": "Waiting for camera input..."
-}</div>
-      </div>
-    </div> -->
-  </section>
-
-  <!-- SDKs -->
-  <!-- <section class="sdk-section" id="sdks">
-    <h2>Official SDKs & Libraries</h2>
-    <p class="section-lead">Install with your favorite package manager</p>
-    
-    <div class="sdk-grid">
-      <div class="sdk-card">
-        <div class="sdk-header">
-          <div class="sdk-icon">🐍</div>
-          <span style="font-size:12px;color:var(--muted)">★ 1.2k</span>
-        </div>
-        <h3 style="margin-bottom:8px">Python SDK</h3>
-        <p style="color:var(--muted);font-size:14px;margin-bottom:12px">Official Python client</p>
-        <div class="install-cmd">pip install signbridge</div>
-      </div>
-      <div class="sdk-card">
-        <div class="sdk-header">
-          <div class="sdk-icon">📦</div>
-          <span style="font-size:12px;color:var(--muted)">★ 890</span>
-        </div>
-        <h3 style="margin-bottom:8px">JavaScript/Node.js</h3>
-        <p style="color:var(--muted);font-size:14px;margin-bottom:12px">For web and Node.js</p>
-        <div class="install-cmd">npm install signbridge</div>
-      </div>
-      <div class="sdk-card">
-        <div class="sdk-header">
-          <div class="sdk-icon">🔷</div>
-          <span style="font-size:12px;color:var(--muted)">★ 420</span>
-        </div>
-        <h3 style="margin-bottom:8px">Go SDK</h3>
-        <p style="color:var(--muted);font-size:14px;margin-bottom:12px">High-performance Go client</p>
-        <div class="install-cmd">go get signbridge.ai/sdk</div>
-      </div>
-      <div class="sdk-card">
-        <div class="sdk-header">
-          <div class="sdk-icon">💎</div>
-          <span style="font-size:12px;color:var(--muted)">★ 310</span>
-        </div>
-        <h3 style="margin-bottom:8px">Ruby Gem</h3>
-        <p style="color:var(--muted);font-size:14px;margin-bottom:12px">For Rails and Ruby apps</p>
-        <div class="install-cmd">gem install signbridge</div>
-      </div>
+  <!-- Collaborator Section -->
+  <div class="collaborator-section">
+    <div class="collab-content">
+      <h3>Join the Research</h3>
+      <p>Deaf signers interested in building ethical ASL technology together. No coding required.</p>
     </div>
-  </section> -->
-
-  <!-- Pricing Calculator -->
-  <!-- <section class="pricing-section" id="pricing">
-    <div class="container">
-      <h2>Simple, usage-based pricing</h2>
-      <p class="section-lead">Pay only for what you use • Free tier included</p>
-      
-      <div class="pricing-calculator">
-        <div class="calc-input">
-          <label>Monthly API Calls: <span id="callCount">10,000</span></label>
-          <input type="range" class="slider" id="callSlider" min="0" max="1000000" value="10000" step="1000">
-        </div>
-        
-        <div class="calc-result">
-          <div class="price-display" id="priceDisplay">$0</div>
-          <p style="color:var(--muted)">per month</p>
-        </div>
-        
-        <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--border);font-size:14px;color:var(--muted)">
-          <p>• First 5,000 calls free every month</p>
-          <p>• $0.002 per call after that</p>
-          <p>• Volume discounts at 100k+ calls/month</p>
-        </div>
-      </div>
+    <div class="collaborator-actions">
+      <a href="./public/video_full.gif" download="SignBridge_Collaborator_Call.gif" class="btn btn-primary">
+        Download Flyer
+      </a>
+      <a href="./public/video_full.gif" target="_blank" class="btn btn-secondary">
+        View Flyer
+      </a>
+      <a href="mailto:hello@signbridge.ai" class="btn btn-secondary">
+        Get Involved
+      </a>
     </div>
-  </section> -->
-
-  <!-- Why SignBridge - Creative Icons -->
-  <!-- <section class="sdk-section">
-    <h2>Why developers choose SignBridge</h2>
-    <p class="section-lead">Built for speed, accuracy, and developer experience</p>
-    
-    <div class="feature-grid">
-      <div class="feature">
-        <div class="feature-icon"><span style="position:relative;z-index:1">⚡</span></div>
-        <h3>Lightning Fast</h3>
-        <p>Sub-100ms latency with edge deployment across 12 regions globally</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon"><span style="position:relative;z-index:1">🛡️</span></div>
-        <h3>Privacy First</h3>
-        <p>Zero video storage • On-device processing option • SOC 2 Type II certified</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon"><span style="position:relative;z-index:1">🎯</span></div>
-        <h3>Highly Accurate</h3>
-        <p>98.5% accuracy on ASL • Trained on 2M+ sign samples • Continuous improvements</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon"><span style="position:relative;z-index:1">🌐</span></div>
-        <h3>Multi-Language</h3>
-        <p>ASL available now • BSL and LSF in Q3 2025 • 8 more languages on roadmap</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon"><span style="position:relative;z-index:1">📊</span></div>
-        <h3>Real-Time Analytics</h3>
-        <p>Live dashboard • Performance metrics • Usage insights • A/B testing support</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon"><span style="position:relative;z-index:1">🔌</span></div>
-        <h3>Webhook Support</h3>
-        <p>Event-driven architecture • Automatic retries • Payload validation • Custom endpoints</p>
-      </div>
-    </div>
-  </section> -->
+  </div>
 
   <!-- Footer -->
   <footer style="border-top:1px solid var(--border);padding:40px 32px">
